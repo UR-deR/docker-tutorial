@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  backend:
+    image: my-ruby:dockerfile
+    command: ruby myapp.rb -o 0.0.0.0
+    ports:
+      - '4567:4567'
+    volumes:
+      - ./backend:/opt/myapp
+    working_dir: /opt/myapp
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0.29
+    platform: linux/x86_64
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./mysql/conf.d/charset.cnf:/etc/mysql/conf.d/charset.cnf
